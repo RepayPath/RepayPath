@@ -112,7 +112,7 @@ workflows:
 
           # 启动 App，RP_TAB=auto 让它每 4 秒自动切页
           SIMCTL_CHILD_RP_TAB=auto xcrun simctl launch "$UDID" "$BUNDLE"
-          sleep 20
+          sleep 25
 
           # 停止录制（必须 SIGINT 才会写完整文件）
           kill -INT $RECPID 2>/dev/null || true
@@ -127,7 +127,7 @@ workflows:
             RECPID2=$!
             sleep 2
             SIMCTL_CHILD_RP_TAB=auto xcrun simctl launch "$UDID" "$BUNDLE"
-            sleep 18
+            sleep 24
             kill -INT $RECPID2 2>/dev/null || true
             sleep 4
             echo "--- retry log ---"

@@ -43,9 +43,11 @@ struct RootView: View {
     private func applyCaptureModeIfNeeded() {
         guard let raw = ProcessInfo.processInfo.environment["RP_TAB"] else { return }
         if raw == "auto" {
+            // 只允许一个定时器：TabView 可能多次触发 onAppear，
+            // 之前没做这个保护，导致多个定时器叠加、切换节奏错乱。
+            guard autoTimer == nil else { return }
             selection = 0
-            autoTimer?.invalidate()
-            autoTimer = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: true) { _ in
+            autoTimer = Timer.scheduledTimer(withTimeInterval: 5.5, repeats: true) { _ in
                 withAnimation(.easeInOut(duration: 0.35)) {
                     selection = (selection + 1) % 4
                 }
