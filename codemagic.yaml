@@ -23,6 +23,8 @@ workflows:
     max_build_duration: 60
     environment:
       xcode: latest
+      groups:
+        - appstore_creds
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.fumikothelen.repaypath
@@ -45,6 +47,6 @@ workflows:
     publishing:
       app_store_connect:
         api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-        key_identifier: $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_identifier: $APP_STORE_CONNECT_ISSUER_ID
+        key_identifier: RLG6ABG37X
+        issuer_identifier: dd7fd4ee-3919-4f40-b1d6-3af6db6f821f
         submit_to_testflight: true
