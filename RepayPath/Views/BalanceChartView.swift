@@ -24,6 +24,7 @@ struct BalanceChartView: View {
                     .padding(.vertical, 30)
             } else {
                 Chart {
+                    // 三个独立 ForEach = 三个独立序列，避免 Charts 把不同序列连成一条锯齿线
                     ForEach(points) { p in
                         AreaMark(
                             x: .value("Year", p.year),
@@ -31,7 +32,9 @@ struct BalanceChartView: View {
                         )
                         .foregroundStyle(AppTheme.accent.opacity(0.15))
                         .interpolationMethod(.monotone)
+                    }
 
+                    ForEach(points) { p in
                         LineMark(
                             x: .value("Year", p.year),
                             y: .value("Balance", p.balance)
@@ -39,7 +42,9 @@ struct BalanceChartView: View {
                         .foregroundStyle(AppTheme.accent)
                         .lineStyle(StrokeStyle(lineWidth: 2.5))
                         .interpolationMethod(.monotone)
+                    }
 
+                    ForEach(points) { p in
                         LineMark(
                             x: .value("Year", p.year),
                             y: .value("Repaid", p.cumulativeRepaid)

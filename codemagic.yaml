@@ -36,6 +36,11 @@ workflows:
             --type IOS_APP_STORE --create
           keychain add-certificates
           xcode-project use-profiles
+      - name: Set build number
+        script: |
+          # 用 Codemagic 的构建计数器作为 CFBundleVersion，避免重复上传被拒
+          agvtool new-version -all $BUILD_NUMBER
+          echo "CFBundleVersion set to $BUILD_NUMBER"
       - name: Build ipa
         script: |
           xcode-project build-ipa \
