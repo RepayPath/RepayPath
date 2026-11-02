@@ -64,15 +64,17 @@ RepayPath/
 codemagic.yaml                  compile-check + signed ios-build
 ```
 
-## Before the first build — replace the bundle ID placeholder
+## Bundle ID
 
-`com.replaceme.repaypath` appears in **three** places:
+Set to **`com.fumikothelen.repaypath`** in:
 
 1. `RepayPath.xcodeproj/project.pbxproj` (Debug and Release configs)
 2. `codemagic.yaml` → `ios_signing.bundle_identifier`
 3. `codemagic.yaml` → `app-store-connect fetch-signing-files`
 
 It must match the App ID registered in the developer account, and **cannot be changed after release**.
+
+Apple Team ID: `V58Z48NR6K` · Bundle ID: `com.fumikothelen.repaypath`
 
 ## Build
 
