@@ -41,12 +41,22 @@ workflows:
           xcode-project build-ipa \
             --project "RepayPath.xcodeproj" \
             --scheme "RepayPath"
+      - name: Upload to App Store Connect
+        script: |
+          set -e
+          mkdir -p "$HOME/private_keys"
+          printf '%s\n' "$APP_STORE_CONNECT_PRIVATE_KEY" | tr -d '\r' \
+            > "$HOME/private_keys/AuthKey_RLG6ABG37X.p8"
+          chmod 600 "$HOME/private_keys/AuthKey_RLG6ABG37X.p8"
+          echo "key file:"; head -1 "$HOME/private_keys/AuthKey_RLG6ABG37X.p8"; wc -c "$HOME/private_keys/AuthKey_RLG6ABG37X.p8"
+
+          for ipa in build/ios/ipa/*.ipa; do
+            echo "Uploading $ipa"
+            xcrun altool --upload-app -f "$ipa" -t ios \
+              --apiKey "RLG6ABG37X" \
+              --apiIssuer "dd7fd4ee-3919-4f40-b1d6-3af6db6f821f" \
+              --verbose
+          done
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
-    publishing:
-      app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-        key_identifier: RLG6ABG37X
-        issuer_identifier: dd7fd4ee-3919-4f40-b1d6-3af6db6f821f
-        submit_to_testflight: true
