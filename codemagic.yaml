@@ -1,0 +1,50 @@
+workflows:
+  compile-check:
+    name: Compile Check (no signing)
+    max_build_duration: 30
+    instance_type: mac_mini_m2
+    environment:
+      xcode: latest
+    scripts:
+      - name: Compile
+        script: |
+          xcodebuild \
+            -project "RepayPath.xcodeproj" \
+            -scheme "RepayPath" \
+            -sdk iphoneos \
+            -configuration Release \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+    artifacts:
+      - build/Build/Products/Release-iphoneos/*.app
+
+  ios-build:
+    name: RepayPath iOS Build (signed)
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      xcode: latest
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.replaceme.repaypath
+    scripts:
+      - name: Set up code signing
+        script: |
+          keychain initialize
+          app-store-connect fetch-signing-files "com.replaceme.repaypath" \
+            --type IOS_APP_STORE --create
+          keychain add-certificates
+          xcode-project use-profiles
+      - name: Build ipa
+        script: |
+          xcode-project build-ipa \
+            --project "RepayPath.xcodeproj" \
+            --scheme "RepayPath"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        api_key: RepayPathIntegration
+        submit_to_testflight: false

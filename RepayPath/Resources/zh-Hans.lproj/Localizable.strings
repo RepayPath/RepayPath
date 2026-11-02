@@ -1,0 +1,78 @@
+/* RepayPath — 简体中文 */
+
+"app.name" = "RepayPath";
+
+"tab.plan" = "输入";
+"tab.result" = "结果";
+"tab.compare" = "对比";
+"tab.info" = "说明";
+
+"plan.plan1" = "Plan 1";
+"plan.plan2" = "Plan 2";
+"plan.plan4" = "Plan 4";
+"plan.plan5" = "Plan 5";
+"plan.postgraduate" = "研究生贷款";
+"plan.plan1.summary" = "2012 年之前发放的贷款（英格兰、威尔士、北爱尔兰）。";
+"plan.plan2.summary" = "2012 年起发放的本科贷款（英格兰、威尔士）。";
+"plan.plan4.summary" = "苏格兰本科贷款。";
+"plan.plan5.summary" = "2023 年 8 月起发放的本科贷款（英格兰）。";
+"plan.postgraduate.summary" = "硕士与博士贷款。";
+
+"input.section.loan" = "你的贷款";
+"input.plan" = "还款计划";
+"input.balance" = "当前余额";
+"input.salary" = "税前年薪";
+"input.growth" = "年薪年增长率";
+"input.rate" = "年利率";
+"input.firstYear" = "首次应还款年份";
+"input.balance.hint" = "填学生贷款公司（SLC）账户里显示的余额。";
+"input.salary.hint" = "税前工资，含奖金与加班费。";
+"input.rate.hint" = "利率由政府设定且每月调整。知道当前利率的话请自行修改。";
+"input.firstYear.hint" = "你首次应还款的那个 4 月。注销年限从这一年算起。";
+"input.reset" = "恢复默认数值";
+
+"result.monthly" = "每月扣款";
+"result.payoff" = "还清时间";
+"result.never" = "永远还不完";
+"result.never.detail" = "到时会注销约 %@ 的余额。";
+"result.totalRepaid" = "累计还款";
+"result.totalInterest" = "累计利息";
+"result.writeOff" = "注销年份";
+"result.balanceLeft" = "被注销的余额";
+"result.card.paid" = "能在注销前还清";
+"result.card.writeoff" = "这笔贷款还不完";
+"result.none" = "此收入下无需还款";
+
+"compare.title" = "额外还款";
+"compare.subtitle" = "仅供参考。多还是可选的，不多还也不会被罚。";
+"compare.base" = "当前方案";
+"compare.extra" = "每月额外还款";
+"compare.saved" = "提前";
+"compare.earliest" = "最早还清";
+"compare.nochange" = "无变化";
+"compare.lump" = "一次性还款";
+"compare.presets" = "常见选择";
+"compare.savePrompt" = "给这套方案起名";
+"compare.save" = "保存";
+"compare.noSaved" = "保存的方案会显示在这里。";
+"compare.extraAmount" = "每月多还 %@";
+"compare.savedMonths" = "提前 %d 个月";
+
+"chart.title" = "余额变化";
+"chart.empty" = "数据不足，暂时画不出时间线。";
+"chart.legend.balance" = "余额";
+"chart.legend.repaid" = "累计已还";
+
+"info.what" = "这个 App 做什么";
+"info.what.body" = "RepayPath 依据 GOV.UK 公布的还款规则，估算你的学生贷款会怎么走：每月扣多少、什么时候（或者是否）能还清、在注销之前会累积多少利息。全部计算在你的设备上完成。";
+"info.rules" = "使用的规则";
+"info.thresholds" = "收入门槛（2026/27）";
+"info.rates" = "Plan 1、2、4、5 为超出门槛部分的 9%；研究生贷款为 6%。";
+"info.writeoff" = "从首次应还款的那个 4 月算起，满一定年限后注销：Plan 1 为 25 年，Plan 2 与 Plan 4 为 30 年，Plan 5 为 40 年，研究生贷款为 30 年。";
+"info.writeoff.title" = "注销规则";
+"info.sources" = "数据来源";
+"info.disclaimer.title" = "免责声明";
+"info.disclaimer" = "本 App 只做算术计算，不构成财务、债务或投资建议。实际扣款由 HMRC 与学生贷款公司（SLC）计算。RepayPath 是独立工具，与学生贷款公司、HMRC 及英国政府无隶属、背书或合作关系。";
+"info.privacy.title" = "隐私";
+"info.privacy" = "RepayPath 完全离线运行：不注册账号、不连接网络、不接入任何分析或广告服务、不收集也不上传任何数据。你输入的数值与保存的方案只存在这台设备上。";
+"info.verified" = "数据核对日期：2026 年 11 月 2 日（对照 GOV.UK）。";

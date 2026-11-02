@@ -1,0 +1,78 @@
+/* RepayPath — English strings */
+
+"app.name" = "RepayPath";
+
+"tab.plan" = "Plan";
+"tab.result" = "Result";
+"tab.compare" = "Compare";
+"tab.info" = "About";
+
+"plan.plan1" = "Plan 1";
+"plan.plan2" = "Plan 2";
+"plan.plan4" = "Plan 4";
+"plan.plan5" = "Plan 5";
+"plan.postgraduate" = "Postgraduate";
+"plan.plan1.summary" = "Loans taken out before 2012 (England, Wales and Northern Ireland).";
+"plan.plan2.summary" = "Undergraduate loans started since 2012 (England and Wales).";
+"plan.plan4.summary" = "Scottish undergraduate loans.";
+"plan.plan5.summary" = "Undergraduate loans started from August 2023 (England).";
+"plan.postgraduate.summary" = "Master's and Doctoral loans.";
+
+"input.section.loan" = "Your loan";
+"input.plan" = "Repayment plan";
+"input.balance" = "Balance";
+"input.salary" = "Annual salary";
+"input.growth" = "Salary growth per year";
+"input.rate" = "Interest rate";
+"input.firstYear" = "First repayment year";
+"input.balance.hint" = "The figure shown in your Student Loans Company account.";
+"input.salary.hint" = "Gross salary before tax, including bonuses and overtime.";
+"input.rate.hint" = "Interest is set by the government and changes monthly. Adjust it if you know your current rate.";
+"input.firstYear.hint" = "The April you were first due to repay. Write-off is counted from this date.";
+"input.reset" = "Reset to typical values";
+
+"result.monthly" = "Monthly repayment";
+"result.payoff" = "Paid off";
+"result.never" = "Never repaid in full";
+"result.never.detail" = "About %@ will be written off at that point.";
+"result.totalRepaid" = "Total repaid";
+"result.totalInterest" = "Total interest";
+"result.writeOff" = "Write-off year";
+"result.balanceLeft" = "Written off";
+"result.card.paid" = "Paid off before write-off";
+"result.card.writeoff" = "This loan is never repaid in full";
+"result.none" = "Nothing at this income";
+
+"compare.title" = "Extra payment";
+"compare.subtitle" = "Estimates only. Overpaying is optional — there is no penalty for not doing it.";
+"compare.base" = "Current plan";
+"compare.extra" = "Extra per month";
+"compare.saved" = "Saved";
+"compare.earliest" = "Earliest payoff";
+"compare.nochange" = "No change";
+"compare.lump" = "Lump sum";
+"compare.presets" = "Common choices";
+"compare.savePrompt" = "Name this plan";
+"compare.save" = "Save";
+"compare.noSaved" = "Saved plans appear here.";
+"compare.extraAmount" = "Extra %@ / month";
+"compare.savedMonths" = "%d months earlier";
+
+"chart.title" = "Balance over time";
+"chart.empty" = "Not enough data to draw a timeline yet.";
+"chart.legend.balance" = "Balance";
+"chart.legend.repaid" = "Repaid so far";
+
+"info.what" = "What this app does";
+"info.what.body" = "RepayPath estimates how a student loan behaves under the repayment rules published by GOV.UK: how much is deducted each month, when — or whether — the loan is repaid in full, and how much interest builds up before it is written off. Everything is calculated on your device.";
+"info.rules" = "Rules used";
+"info.thresholds" = "Income thresholds (2026/27)";
+"info.rates" = "9% of income above the threshold for Plans 1, 2, 4 and 5; 6% for Postgraduate loans.";
+"info.writeoff" = "A loan is written off a fixed number of years after the April you were first due to repay: 25 years for Plan 1, 30 years for Plan 2 and Plan 4, 40 years for Plan 5, and 30 years for Postgraduate loans.";
+"info.writeoff.title" = "Write-off";
+"info.sources" = "Sources";
+"info.disclaimer.title" = "Disclaimer";
+"info.disclaimer" = "This app performs arithmetic only. It is not financial, debt, or investment advice. Your actual repayments are calculated by HMRC and the Student Loans Company. RepayPath is an independent tool; it is not affiliated with, endorsed by, or connected to the Student Loans Company, HMRC, or the UK government.";
+"info.privacy.title" = "Privacy";
+"info.privacy" = "RepayPath works entirely offline. It does not create an account, does not connect to the internet, does not use analytics or advertising, and does not collect or transmit any data. Your inputs and saved plans stay on this device.";
+"info.verified" = "Figures checked against GOV.UK on 2 November 2026.";
