@@ -14,8 +14,19 @@ struct BalanceChartView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(L10n.chartTitle)
-                .font(.headline)
+            HStack {
+                Text(L10n.chartTitle)
+                    .font(.headline)
+                Spacer()
+            }
+
+            // 图例放在图上，避免被底部 Tab 栏遮挡
+            HStack(spacing: 16) {
+                legend(color: AppTheme.accent, text: L10n.chartLegendBalance, dashed: false)
+                legend(color: .orange, text: L10n.chartLegendRepaid, dashed: true)
+            }
+            .font(.caption2)
+            .foregroundStyle(.secondary)
 
             if points.count < 2 {
                 Text(L10n.chartEmpty)
@@ -24,7 +35,7 @@ struct BalanceChartView: View {
                     .padding(.vertical, 30)
             } else {
                 Chart {
-                    // 三个独立 ForEach = 三个独立序列，避免 Charts 把不同序列连成一条锯齿线
+                    // 面积：仅余额
                     ForEach(points) { p in
                         AreaMark(
                             x: .value("Year", p.year),
@@ -34,26 +45,30 @@ struct BalanceChartView: View {
                         .interpolationMethod(.monotone)
                     }
 
+                    // 两条线用 series 维度区分，颜色由 chartForegroundStyleScale 指定
                     ForEach(points) { p in
                         LineMark(
                             x: .value("Year", p.year),
                             y: .value("Balance", p.balance)
                         )
-                        .foregroundStyle(AppTheme.accent)
+                        .foregroundStyle(by: .value("Series", "Balance"))
                         .lineStyle(StrokeStyle(lineWidth: 2.5))
                         .interpolationMethod(.monotone)
-                    }
 
-                    ForEach(points) { p in
                         LineMark(
                             x: .value("Year", p.year),
                             y: .value("Repaid", p.cumulativeRepaid)
                         )
-                        .foregroundStyle(.orange)
-                        .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [4, 3]))
+                        .foregroundStyle(by: .value("Series", "Repaid"))
+                        .lineStyle(StrokeStyle(lineWidth: 1.8, dash: [5, 4]))
                         .interpolationMethod(.monotone)
                     }
                 }
+                .chartForegroundStyleScale([
+                    "Balance": AppTheme.accent,
+                    "Repaid": Color.orange
+                ])
+                .chartLegend(.hidden)
                 .chartXScale(domain: firstYear...max(lastYear, firstYear + 1))
                 .chartYScale(domain: 0...(maxValue * 1.08))
                 .chartXAxis {
@@ -76,22 +91,13 @@ struct BalanceChartView: View {
                         }
                     }
                 }
-                .frame(height: 210)
-                .padding(.vertical, 4)
-
-                HStack(spacing: 16) {
-                    legend(color: AppTheme.accent, text: L10n.chartLegendBalance)
-                    legend(color: .orange, text: L10n.chartLegendRepaid)
-                }
-                .font(.caption2)
-                .foregroundStyle(.secondary)
+                .frame(height: 200)
             }
         }
         .padding(16)
         .background(RoundedRectangle(cornerRadius: 16).fill(AppTheme.cardBackground))
     }
 
-    /// 每 5 年一个刻度，起止年份必显示
     private var yearTicks: [Int] {
         var ticks: [Int] = []
         var y = firstYear
@@ -103,9 +109,15 @@ struct BalanceChartView: View {
         return ticks
     }
 
-    private func legend(color: Color, text: String) -> some View {
+    private func legend(color: Color, text: String, dashed: Bool) -> some View {
         HStack(spacing: 5) {
-            Circle().fill(color).frame(width: 7, height: 7)
+            if dashed {
+                Rectangle()
+                    .fill(color)
+                    .frame(width: 14, height: 1.5)
+            } else {
+                Circle().fill(color).frame(width: 7, height: 7)
+            }
             Text(text)
         }
     }

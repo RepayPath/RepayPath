@@ -12,15 +12,15 @@ struct ResultView: View {
                 VStack(spacing: 16) {
                     heroCard
                     conclusionCard
-                    statsGrid
                     BalanceChartView(points: points)
+                    statsGrid
                     Text(L10n.infoVerified)
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                         .padding(.top, 4)
                 }
                 .padding(.horizontal)
-                .padding(.bottom, 96)
+                .padding(.bottom, 110)
             }
             .background(Color(.systemGroupedBackground))
             .navigationTitle(L10n.tabResult)
