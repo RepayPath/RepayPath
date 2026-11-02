@@ -25,22 +25,12 @@ struct PlanInputView: View {
                 }
 
                 Section {
-                    HStack {
-                        Text("£")
-                            .foregroundStyle(.secondary)
-                        TextField(L10n.labelBalance, value: $state.input.balance, format: .number)
-                            .keyboardType(.decimalPad)
-                    }
+                    moneyRow(title: L10n.labelBalance, value: $state.input.balance)
                     Text(L10n.hintBalance)
                         .font(.footnote)
                         .foregroundStyle(.secondary)
 
-                    HStack {
-                        Text("£")
-                            .foregroundStyle(.secondary)
-                        TextField(L10n.labelSalary, value: $state.input.annualSalary, format: .number)
-                            .keyboardType(.decimalPad)
-                    }
+                    moneyRow(title: L10n.labelSalary, value: $state.input.annualSalary)
                     Text(L10n.hintSalary)
                         .font(.footnote)
                         .foregroundStyle(.secondary)
@@ -93,6 +83,7 @@ struct PlanInputView: View {
                         Text(Money.cents(monthlyDue))
                             .font(.headline)
                             .monospacedDigit()
+                            .foregroundStyle(AppTheme.accent)
                     }
                 }
 
@@ -103,6 +94,21 @@ struct PlanInputView: View {
                 }
             }
             .navigationTitle(L10n.tabPlan)
+        }
+    }
+
+    /// 金额输入行：左侧固定标签，右侧 £ + 数字，输入时标签不会消失
+    private func moneyRow(title: String, value: Binding<Double>) -> some View {
+        HStack(spacing: 8) {
+            Text(title)
+            Spacer(minLength: 12)
+            Text("£")
+                .foregroundStyle(.secondary)
+            TextField("0", value: value, format: .number)
+                .keyboardType(.decimalPad)
+                .multilineTextAlignment(.trailing)
+                .monospacedDigit()
+                .frame(minWidth: 90, maxWidth: 150)
         }
     }
 }

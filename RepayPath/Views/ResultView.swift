@@ -20,7 +20,7 @@ struct ResultView: View {
                         .padding(.top, 4)
                 }
                 .padding(.horizontal)
-                .padding(.bottom, 24)
+                .padding(.bottom, 96)
             }
             .background(Color(.systemGroupedBackground))
             .navigationTitle(L10n.tabResult)

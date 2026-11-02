@@ -14,7 +14,7 @@ struct LoanInput: Identifiable, Codable, Equatable {
         LoanInput(
             plan: .plan2,
             balance: 45_000,
-            annualSalary: 40_000,
+            annualSalary: 55_000,
             salaryGrowth: 0.03,
             interestRate: 0.065,
             firstRepayYear: Calendar.current.component(.year, from: Date())

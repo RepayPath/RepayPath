@@ -100,8 +100,8 @@ workflows:
           echo "$UDID" > capture/udid.txt
           sleep 5
 
-          # 开始录制
-          xcrun simctl io "$UDID" recordVideo --codec h264 --force "capture/demo.mp4" &
+          # 开始录制（把 recordVideo 的输出留在日志里，失败时能看到原因）
+          xcrun simctl io "$UDID" recordVideo --codec h264 --force "capture/demo.mp4" > capture/record.log 2>&1 &
           RECPID=$!
           sleep 3
 
@@ -111,8 +111,24 @@ workflows:
 
           # 停止录制（必须 SIGINT 才会写完整文件）
           kill -INT $RECPID 2>/dev/null || true
-          sleep 3
+          sleep 4
+          echo "--- recordVideo log ---"
+          cat capture/record.log 2>/dev/null || true
           ls -la capture
+
+          if [ ! -s "capture/demo.mp4" ]; then
+            echo "!! 第一次录制没有产出文件，换写法重试"
+            xcrun simctl io "$UDID" recordVideo --codec=h264 --force "capture/demo.mp4" > capture/record2.log 2>&1 &
+            RECPID2=$!
+            sleep 2
+            SIMCTL_CHILD_RP_TAB=auto xcrun simctl launch "$UDID" "$BUNDLE"
+            sleep 18
+            kill -INT $RECPID2 2>/dev/null || true
+            sleep 4
+            echo "--- retry log ---"
+            cat capture/record2.log 2>/dev/null || true
+            ls -la capture
+          fi
       - name: Screenshots per tab
         script: |
           set -e

@@ -75,37 +75,34 @@ enum Simulator {
         )
     }
 
-    /// 按年采样，供曲线图使用
+    /// 按年采样，供曲线图使用（按整年推进，保证 X 轴年份严格递增）
     static func yearlyPoints(_ input: LoanInput,
                              extraMonthly: Double = 0,
                              lumpSum: Double = 0) -> [YearPoint] {
-        let writeOffYear = input.firstRepayYear + input.plan.writeOffYears
         let monthlyRate = input.interestRate / 12.0
+        let writeOffYear = input.firstRepayYear + input.plan.writeOffYears
         var balance = max(0, input.balance - max(0, lumpSum))
         var salary = input.annualSalary
         var cumulative = 0.0
         var year = input.firstRepayYear
-        var month = 4
-        var points: [YearPoint] = [YearPoint(year: year, balance: balance, cumulativeRepaid: 0)]
 
-        for _ in 0..<(60 * 12) {
-            if year >= writeOffYear || balance <= 0.005 { break }
-            let interest = balance * monthlyRate
-            balance += interest
-            let due = monthlyRepayment(plan: input.plan, monthlyIncome: salary / 12.0) + max(0, extraMonthly)
-            let paid = min(due, balance)
-            balance -= paid
-            cumulative += paid
+        var points: [YearPoint] = [
+            YearPoint(year: year, balance: balance, cumulativeRepaid: 0)
+        ]
 
-            month += 1
-            if month > 12 {
-                month = 1
-                year += 1
-                salary *= (1 + input.salaryGrowth)
-                points.append(YearPoint(year: year, balance: max(0, balance), cumulativeRepaid: cumulative))
+        while year < writeOffYear && balance > 0.005 {
+            for _ in 0..<12 {
+                if balance <= 0.005 { break }
+                let interest = balance * monthlyRate
+                balance += interest
+                let due = monthlyRepayment(plan: input.plan, monthlyIncome: salary / 12.0)
+                    + max(0, extraMonthly)
+                let paid = min(due, balance)
+                balance -= paid
+                cumulative += paid
             }
-        }
-        if let last = points.last, last.year != year {
+            year += 1
+            salary *= (1 + input.salaryGrowth)
             points.append(YearPoint(year: year, balance: max(0, balance), cumulativeRepaid: cumulative))
         }
         return points
