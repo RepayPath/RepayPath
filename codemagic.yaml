@@ -63,7 +63,7 @@ workflows:
       - /tmp/xcodebuild_logs/*.log
 
   preview:
-    name: App Preview (screenshots + clips, no signing)
+    name: Demo Video + Screenshots (no signing)
     max_build_duration: 30
     environment:
       xcode: latest
@@ -78,7 +78,7 @@ workflows:
             -derivedDataPath build \
             CODE_SIGNING_ALLOWED=NO \
             build
-      - name: Capture screenshots and clips
+      - name: Record one continuous demo (home screen -> all tabs)
         script: |
           set -e
           BUNDLE="com.fumikothelen.repaypath"
@@ -90,23 +90,43 @@ workflows:
             UDID=$(xcrun simctl list devices available | grep -m1 "iPhone 16 Pro Max (" | grep -oE "[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}")
           fi
           echo "DEVICE=$UDID"
+
           xcrun simctl boot "$UDID" || true
           xcrun simctl bootstatus "$UDID" -b
           xcrun simctl install "$UDID" "$APP"
+
+          # 回到主屏，让录像从桌面开始
+          xcrun simctl terminate "$UDID" "$BUNDLE" 2>/dev/null || true
+          echo "$UDID" > capture/udid.txt
+          sleep 5
+
+          # 开始录制
+          xcrun simctl io "$UDID" recordVideo --codec h264 --force "capture/demo.mp4" &
+          RECPID=$!
+          sleep 3
+
+          # 启动 App，RP_TAB=auto 让它每 4 秒自动切页
+          SIMCTL_CHILD_RP_TAB=auto xcrun simctl launch "$UDID" "$BUNDLE"
+          sleep 20
+
+          # 停止录制（必须 SIGINT 才会写完整文件）
+          kill -INT $RECPID 2>/dev/null || true
+          sleep 3
+          ls -la capture
+      - name: Screenshots per tab
+        script: |
+          set -e
+          BUNDLE="com.fumikothelen.repaypath"
+          UDID_FILE=$(cat capture/udid.txt)
+          echo "booted=$UDID_FILE"
           for i in 0 1 2 3; do
-            xcrun simctl terminate "$UDID" "$BUNDLE" 2>/dev/null || true
-            SIMCTL_CHILD_RP_TAB=$i xcrun simctl launch "$UDID" "$BUNDLE"
-            sleep 4
-            xcrun simctl io "$UDID" screenshot "capture/tab$i.png"
-            xcrun simctl io "$UDID" recordVideo --codec h264 --force "capture/tab$i.mp4" &
-            RECPID=$!
-            sleep 6
-            kill -INT $RECPID 2>/dev/null || true
-            sleep 2
-            xcrun simctl terminate "$UDID" "$BUNDLE" 2>/dev/null || true
-            echo "captured tab$i"
+            xcrun simctl terminate "$UDID_FILE" "$BUNDLE" 2>/dev/null || true
+            SIMCTL_CHILD_RP_TAB=$i xcrun simctl launch "$UDID_FILE" "$BUNDLE"
+            sleep 3
+            xcrun simctl io "$UDID_FILE" screenshot "capture/screen$i.png"
+            echo "shot tab$i"
           done
           ls -la capture
     artifacts:
-      - capture/*.png
       - capture/*.mp4
+      - capture/*.png
