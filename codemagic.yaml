@@ -48,7 +48,8 @@ workflows:
           printf '%s\n' "$APP_STORE_CONNECT_PRIVATE_KEY" | tr -d '\r' \
             > "$HOME/private_keys/AuthKey_RLG6ABG37X.p8"
           chmod 600 "$HOME/private_keys/AuthKey_RLG6ABG37X.p8"
-          echo "key file:"; head -1 "$HOME/private_keys/AuthKey_RLG6ABG37X.p8"; wc -c "$HOME/private_keys/AuthKey_RLG6ABG37X.p8"
+          head -1 "$HOME/private_keys/AuthKey_RLG6ABG37X.p8"
+          wc -c "$HOME/private_keys/AuthKey_RLG6ABG37X.p8"
 
           for ipa in build/ios/ipa/*.ipa; do
             echo "Uploading $ipa"
@@ -60,3 +61,52 @@ workflows:
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
+
+  preview:
+    name: App Preview (screenshots + clips, no signing)
+    max_build_duration: 30
+    environment:
+      xcode: latest
+    scripts:
+      - name: Build for simulator
+        script: |
+          xcodebuild \
+            -project "RepayPath.xcodeproj" \
+            -scheme "RepayPath" \
+            -sdk iphonesimulator \
+            -configuration Debug \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+      - name: Capture screenshots and clips
+        script: |
+          set -e
+          BUNDLE="com.fumikothelen.repaypath"
+          APP=$(find build/Build/Products/Debug-iphonesimulator -maxdepth 1 -name "*.app" | head -1)
+          echo "APP=$APP"
+          mkdir -p capture
+          UDID=$(xcrun simctl list devices available | grep -m1 "iPhone 17 Pro Max (" | grep -oE "[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}")
+          if [ -z "$UDID" ]; then
+            UDID=$(xcrun simctl list devices available | grep -m1 "iPhone 16 Pro Max (" | grep -oE "[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}")
+          fi
+          echo "DEVICE=$UDID"
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl install "$UDID" "$APP"
+          for i in 0 1 2 3; do
+            xcrun simctl terminate "$UDID" "$BUNDLE" 2>/dev/null || true
+            SIMCTL_CHILD_RP_TAB=$i xcrun simctl launch "$UDID" "$BUNDLE"
+            sleep 4
+            xcrun simctl io "$UDID" screenshot "capture/tab$i.png"
+            xcrun simctl io "$UDID" recordVideo --codec h264 --force "capture/tab$i.mp4" &
+            RECPID=$!
+            sleep 6
+            kill -INT $RECPID 2>/dev/null || true
+            sleep 2
+            xcrun simctl terminate "$UDID" "$BUNDLE" 2>/dev/null || true
+            echo "captured tab$i"
+          done
+          ls -la capture
+    artifacts:
+      - capture/*.png
+      - capture/*.mp4
