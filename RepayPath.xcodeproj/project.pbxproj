@@ -90,6 +90,7 @@
 		DD0000000000000000000004 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				BB0000000000000000000011 /* ScenarioStore.swift */,
 				BB0000000000000000000002 /* Scenario.swift */,
 				BB0000000000000000000003 /* LoanPlan.swift */,
 				BB0000000000000000000004 /* SimulationResult.swift */,
@@ -103,7 +104,6 @@
 			children = (
 				BB0000000000000000000009 /* RootView.swift */,
 				BB0000000000000000000010 /* ResultView.swift */,
-				BB0000000000000000000011 /* ScenarioStore.swift */,
 				BB0000000000000000000012 /* PlanInputView.swift */,
 				BB0000000000000000000013 /* BalanceChartView.swift */,
 				BB0000000000000000000014 /* InfoView.swift */,
